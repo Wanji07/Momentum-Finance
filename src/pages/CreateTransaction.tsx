@@ -1,3 +1,5 @@
+import { FaArrowLeftLong } from "react-icons/fa6";
+
 export default function CreateTransaction() {
     const fieldClass =
         "w-full rounded-lg border border-white/10 bg-[#1d2635] px-3 py-2.5 text-sm text-white placeholder:text-white/35 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] outline-none transition-all duration-200 focus:border-emerald-400/50 focus:bg-[#1f2c3e] focus:shadow-[0_0_0_3px_rgba(16,185,129,0.12)]";
@@ -15,7 +17,7 @@ export default function CreateTransaction() {
                 <form className="flex flex-col gap-4">
                     <div className="flex flex-col gap-2">
                         <label htmlFor="amount" className="text-xs font-semibold tracking-wide text-white/70 uppercase">Amount</label>
-                        <input id="amount" type="number" name="amount" placeholder="₱0.00" className={fieldClass} />
+                        <input id="amount" type="number" name="amount" placeholder="₱ 0.00" className={fieldClass} />
                     </div>
 
                     <div className="grid grid-cols-2 gap-3">
@@ -37,6 +39,11 @@ export default function CreateTransaction() {
                     </div>
 
                     <div className="flex flex-col gap-2">
+                        <label htmlFor="date" className="text-xs font-semibold tracking-wide text-white/70 uppercase">Date</label>
+                        <input id="date" type="date" name="date" className={`${fieldClass} date-input`} />
+                    </div>
+                    
+                    <div className="flex flex-col gap-2">
                         <label htmlFor="receipt" className="text-xs font-semibold tracking-wide text-white/70 uppercase">Receipt (optional)</label>
                         <input id="receipt" type="file" name="receipt" accept="image/*,application/pdf" className={receiptFieldClass} />
                     </div>
@@ -45,6 +52,7 @@ export default function CreateTransaction() {
                         <label htmlFor="note" className="text-xs font-semibold tracking-wide text-white/70 uppercase">Note</label>
                         <input id="note" type="text" name="note" placeholder="Add a quick note" className={fieldClass} />
                     </div>
+
 
                     <button
                         type="submit"
@@ -56,9 +64,9 @@ export default function CreateTransaction() {
             </section>
             <button
                 type="button"
-                className="w-[88%] max-w-md rounded-lg border border-white/5 bg-[#1d2635] px-4 py-2.5 text-xs font-semibold tracking-[0.14em] text-white/75 transition-all duration-200 hover:-translate-y-0.5 hover:border-emerald-400/35 hover:bg-emerald-500/10 hover:text-emerald-200"
+                className="flex flex-row gap-2 items-center justify-center w-[88%] max-w-md rounded-lg border border-white/5 bg-[#1d2635] px-4 py-2.5 text-xs font-semibold tracking-[0.14em] text-white/75 transition-all duration-200 hover:-translate-y-0.5 hover:border-emerald-400/35 hover:bg-emerald-500/10 hover:text-emerald-200"
             >
-                GO BACK HOME
+                <FaArrowLeftLong /> Back
             </button>
         </div>
     )

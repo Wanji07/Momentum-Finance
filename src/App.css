@@ -4,3 +4,7 @@
   place-items: center;
   background-color: #0D1117;
 }
+
+.date-input::-webkit-calendar-picker-indicator {
+  filter: invert(1) brightness(0.5);
+}
