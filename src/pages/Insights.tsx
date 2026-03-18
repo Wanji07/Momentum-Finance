@@ -2,8 +2,29 @@ import { useState } from 'react'
 import LinearProgress from '@mui/material/LinearProgress';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
+import { Pie, PieChart, ResponsiveContainer, Cell, PieLabelRenderProps } from 'recharts'
 
 export default function Insights() {
+
+    const data =  [
+        { category: "food", value: 60},
+        { category: "transportation", value: 40},
+    ]
+
+    const categoryEmojis: { [key: string]: string } = {
+        food: '🍔',
+        transportation: '🚗',
+    }
+
+    const totalValue = data.reduce((sum, item) => sum + item.value, 0)
+    
+    const getPercentage = (value: number) => Math.round((value / totalValue) * 100)
+    const getCompactCategoryLabel = (label: string) =>
+        label.length > 9 ? `${label.slice(0, 8)}.` : label
+
+    const pieColors = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899']
+    
+    
     const [timeFilter, setTimeFilter] = useState<'week' | 'month' | 'year'>('week') 
     const getFilterLabelClass = (filter: 'week' | 'month' | 'year') => {
         const baseClass = 'cursor-pointer rounded-md border px-2 py-1.5 text-center text-xs font-semibold tracking-wide transition-colors'
@@ -12,6 +33,24 @@ export default function Insights() {
 
         return `${baseClass} ${timeFilter === filter ? activeClass : inactiveClass}`
     }
+
+    const RADIAN = Math.PI / 180
+    const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, name }: PieLabelRenderProps) => {
+    if (cx == null || cy == null || innerRadius == null || outerRadius == null) {
+        return null;
+    }
+    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+    const ncx = Number(cx);
+    const x = ncx + radius * Math.cos(-(midAngle ?? 0) * RADIAN);
+    const ncy = Number(cy);
+    const y = ncy + radius * Math.sin(-(midAngle ?? 0) * RADIAN);
+
+    return (
+        <text x={x} y={y} fill="white" textAnchor={x > ncx ? 'start' : 'end'} dominantBaseline="central" fontSize={10} fontWeight={600}>
+            {getCompactCategoryLabel(String(name ?? ''))}
+        </text>
+    );
+    };
 
     return(
         <>
@@ -172,7 +211,32 @@ export default function Insights() {
                     <div className="w-1 h-4 bg-emerald-500 rounded-full"></div>
                     <h2 className="text-emerald-400 text-sm font-semibold tracking-wide">TOP SPENDING CATEGORIES</h2>
                 </div>
-                <section id="top-categories-dashboard" className="flex flex-col w-full mx-auto border border-white/5 gap-2 shadow-md p-6 bg-[#1d2635] bg-[radial-gradient(circle_at_top_right,#3b82f622,transparent_60%)] rounded-xl">
+                <section id="top-categories-dashboard" className="overflow-hidden flex flex-col w-full mx-auto border border-white/5 gap-2 shadow-md p-6 bg-[#1d2635] bg-[radial-gradient(circle_at_top_right,#3b82f622,transparent_60%)] rounded-xl">
+                    <div className="h-50 w-full">
+                        <ResponsiveContainer width="100%" height="110%">
+                            <PieChart>
+                                <Pie data={data} dataKey="value" nameKey="category" label={renderCustomizedLabel} labelLine={false}>
+                                    {data.map((_, index) => (
+                                        <Cell key={`cell-${index}`} fill={pieColors[index]} />
+                                    ))}
+                                </Pie>
+                            </PieChart>
+                        </ResponsiveContainer>
+                    </div>
+                    <div className="mt-4 space-y-2">
+                        {data.map((item, index) => (
+                            <div key={index} className="flex items-center justify-between rounded-lg border border-white/10 bg-white/5 px-3 py-2">
+                                <span className="text-sm font-medium text-white/90">
+                                    {categoryEmojis[item.category]}  {item.category.charAt(0).toUpperCase() + item.category.slice(1)} – {getPercentage(item.value)}%
+                                </span>
+                                <div 
+                                    className="h-2 w-2 rounded-full" 
+                                    style={{ backgroundColor: pieColors[index] }}
+                                ></div>
+                            </div>
+                            
+                        ))}
+                    </div>
                 </section>
             </section>
         </div>
